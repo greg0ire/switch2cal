@@ -1,5 +1,7 @@
 #!bin/python
 import os
+import time
+
 from collections import deque
 from icalendar import Calendar, Event
 from datetime import datetime
@@ -39,7 +41,7 @@ if __name__ == '__main__':
   events.append({
     'name': formerProject,
     'start_date': float(startTimestamp),
-    'end_date': float(currentTimestamp)})
+    'end_date': time.time()})
 
   # Perform work
   # Deliver results
