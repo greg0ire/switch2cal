@@ -35,6 +35,12 @@ if __name__ == '__main__':
     formerProject   = currentProject
     formerTimestamp = currentTimestamp
 
+  # add last event
+  events.append({
+    'name': formerProject,
+    'start_date': float(startTimestamp),
+    'end_date': float(currentTimestamp)})
+
   # Perform work
   # Deliver results
   cal = Calendar()
