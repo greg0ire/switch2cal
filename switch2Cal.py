@@ -43,6 +43,7 @@ def fromSwitchToIntervals():
   return events
 
 def cleanPeriod(period):
+  holidays = [6, 7] # saturday and sunday
   cleanedEvents = deque([])
   # if a period is inside the work period, do not touch it
   # if it is outside, don't take it into account
@@ -73,6 +74,9 @@ def cleanPeriod(period):
       elif stopTime > cleanedStartTime:
         cleanedStopTime = workStopTime
       else:
+        createEvent = False
+
+      if cleanedStartTime.isoweekday() in holidays:
         createEvent = False
 
       if createEvent:
