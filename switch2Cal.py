@@ -1,10 +1,46 @@
 #!bin/python
 import os
-import time
 
 from collections import deque
 from icalendar import Calendar, Event
 from datetime import datetime, timedelta
+
+def fromSwitchToIntervals():
+  # find file
+  inputFileName = os.path.expanduser(os.path.join('~', '.switch', 'switch_history'))
+  events        = deque([])
+
+  # read the content into a set of unique lines
+  formerProject   = ''
+  startTimestamp  = ''
+  for line in open(inputFileName, 'r'):
+    # Parse the line
+    # remove trailing EOL and split by space
+    tokens = line.rstrip('\r\n').split(' ')
+    if len(tokens) == 2:
+      currentTimestamp, currentProject = tokens
+    else:
+      currentProject = ''
+
+    if currentProject != formerProject:
+      if formerProject != '':
+        # got something to store
+        events.append({
+          'name': formerProject,
+          'start_date': datetime.fromtimestamp(float(startTimestamp)),
+          'end_date': datetime.fromtimestamp(float(currentTimestamp))})
+
+      startTimestamp  = currentTimestamp
+
+    formerProject   = currentProject
+
+  # add last event
+  events.append({
+    'name': formerProject,
+    'start_date': datetime.fromtimestamp(float(startTimestamp)),
+    'end_date': datetime.now()})
+
+  return events
 
 def cleanPeriod(period):
   cleanedEvents = deque([])
@@ -54,43 +90,9 @@ def cleanPeriod(period):
 
 
 
-# Gather input
 if __name__ == '__main__':
-  # find file
-  inputFileName = os.path.expanduser(os.path.join('~', '.switch', 'switch_history'))
-  events        = deque([])
-
-  # read the content into a set of unique lines
-  formerProject   = ''
-  formerTimestamp = ''
-  startTimestamp  = ''
-  for line in open(inputFileName, 'r'):
-    # Parse the line
-    # remove trailing EOL and split by space
-    tokens = line.rstrip('\r\n').split(' ')
-    if len(tokens) == 2:
-      currentTimestamp, currentProject = tokens
-    else:
-      currentProject = ''
-
-    if currentProject != formerProject:
-      if formerProject != '':
-        # got something to store
-        events.append({
-          'name': formerProject,
-          'start_date': datetime.fromtimestamp(float(startTimestamp)),
-          'end_date': datetime.fromtimestamp(float(currentTimestamp))})
-
-      startTimestamp  = currentTimestamp
-
-    formerProject   = currentProject
-    formerTimestamp = currentTimestamp
-
-  # add last event
-  events.append({
-    'name': formerProject,
-    'start_date': datetime.fromtimestamp(float(startTimestamp)),
-    'end_date': datetime.now()})
+  # Gather input
+  events = fromSwitchToIntervals()
 
   # Perform work
 
