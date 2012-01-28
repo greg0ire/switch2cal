@@ -5,6 +5,45 @@ import time
 from collections import deque
 from icalendar import Calendar, Event
 from datetime import datetime, timedelta
+
+def cleanPeriod(period):
+  cleanedEvents = deque([])
+  # if a period is inside the work period, do not touch it
+  # if it is outside, don't take it into account
+  # if it overlapses, round the start_date to the nearest work period start
+  startTime    = period['start_date']
+  stopTime     = period['end_date']
+  # validate events
+  if startTime > stopTime:
+    raise Exception("Event %s is invalid: %r > %r" % (period['name'], period['start_date'], period['end_date']))
+
+  if startTime < stopTime:
+    # compute the intersection of the event with working hours
+    workStartTime = startTime.replace(hour=19, minute=30)
+    workStopTime  = startTime.replace(hour=23, minute=59)
+
+    # discard not intersecting events
+    if not (workStopTime < startTime < stopTime < workStartTime + timedelta(days=1)):
+      if startTime < workStartTime:
+        cleanedStartTime = workStartTime
+      elif startTime < workStopTime:
+        cleanedStartTime = startTime
+      else:
+        cleanedStartTime = workStartTime + timedelta(days=1)
+
+      if stopTime < workStopTime:
+        cleanedStopTime = stopTime
+      else:
+        cleanedStopTime = workStopTime
+
+      cleanedEvents.append({
+        'name': period['name'],
+        'start_date': cleanedStartTime,
+        'end_date': cleanedStopTime})
+  return cleanedEvents
+
+
+
 # Gather input
 if __name__ == '__main__':
   # find file
@@ -47,39 +86,7 @@ if __name__ == '__main__':
 
   cleanedEvents = deque([])
   for period in events:
-    # if a period is inside the work period, do not touch it
-    # if it is outside, don't take it into account
-    # if it overlapses, round the start_date to the nearest work period start
-    startTime    = period['start_date']
-    stopTime     = period['end_date']
-    # validate events
-    if startTime > stopTime:
-      raise Exception("Event %s is invalid: %r > %r" % (period['name'], period['start_date'], period['end_date']))
-
-    if startTime < stopTime:
-      # compute the intersection of the event with working hours
-      workStartTime = startTime.replace(hour=19, minute=30)
-      workStopTime  = startTime.replace(hour=23, minute=59)
-
-      # discard not intersecting events
-      if not (workStopTime < startTime < stopTime < workStartTime + timedelta(days=1)):
-        if startTime < workStartTime:
-          cleanedStartTime = workStartTime
-        elif startTime < workStopTime:
-          cleanedStartTime = startTime
-        else:
-          cleanedStartTime = workStartTime + timedelta(days=1)
-
-        if stopTime < workStopTime:
-          cleanedStopTime = stopTime
-        else:
-          cleanedStopTime = workStopTime
-
-        cleanedEvents.append({
-          'name': period['name'],
-          'start_date': cleanedStartTime,
-          'end_date': cleanedStopTime})
-
+    cleanedEvents.extend(cleanPeriod(period))
 
   # Deliver results
   cal = Calendar()
