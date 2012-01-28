@@ -24,6 +24,7 @@ def cleanPeriod(period):
 
     # discard not intersecting events
     if not (workStopTime < startTime < stopTime < workStartTime + timedelta(days=1)):
+      createEvent = True
       if startTime < workStartTime:
         cleanedStartTime = workStartTime
       elif startTime < workStopTime:
@@ -33,13 +34,22 @@ def cleanPeriod(period):
 
       if stopTime < workStopTime:
         cleanedStopTime = stopTime
-      else:
+      elif stopTime > cleanedStartTime:
         cleanedStopTime = workStopTime
+      else:
+        createEvent = False
 
-      cleanedEvents.append({
-        'name': period['name'],
-        'start_date': cleanedStartTime,
-        'end_date': cleanedStopTime})
+      if createEvent:
+        cleanedEvents.append({
+          'name': period['name'],
+          'start_date': cleanedStartTime,
+          'end_date': cleanedStopTime})
+
+      if stopTime > workStartTime + timedelta(days=1):
+        cleanedEvents.extend(cleanPeriod({
+          'name': period['name'],
+          'start_date': workStartTime + timedelta(days=1),
+          'end_date': stopTime}))
   return cleanedEvents
 
 
