@@ -1,13 +1,12 @@
 #!bin/python
 import os
+import argparse
 
 from collections import deque
 from icalendar import Calendar, Event
 from datetime import datetime, timedelta
 
-def fromSwitchToIntervals():
-  # find file
-  inputFileName = os.path.expanduser(os.path.join('~', '.switch', 'switch_history'))
+def fromSwitchToIntervals(inputFileName):
   events        = deque([])
 
   # read the content into a set of unique lines
@@ -95,8 +94,16 @@ def cleanPeriod(period):
 
 
 if __name__ == '__main__':
+  parser = argparse.ArgumentParser(description='Build an ical file from a switch history file')
+  parser.add_argument('--input',
+                      default=os.path.expanduser(os.path.join('~', '.switch', 'switch_history')),
+                      help='the input file path')
+
+  args = parser.parse_args()
+
+
   # Gather input
-  events = fromSwitchToIntervals()
+  events = fromSwitchToIntervals(args.input)
 
   # Perform work
 
