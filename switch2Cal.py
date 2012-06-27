@@ -21,16 +21,14 @@ def fromSwitchToIntervals(inputFileName):
     else:
       currentProject = ''
 
-    if currentProject != formerProject:
-      if formerProject != '':
-        # got something to store
-        events.append({
-          'name': formerProject,
-          'start_date': datetime.fromtimestamp(float(startTimestamp)),
-          'end_date': datetime.fromtimestamp(float(currentTimestamp))})
+    if formerProject != '':
+      # got something to store
+      events.append({
+        'name': formerProject,
+        'start_date': datetime.fromtimestamp(float(startTimestamp)),
+        'end_date': datetime.fromtimestamp(float(currentTimestamp))})
 
-      startTimestamp  = currentTimestamp
-
+    startTimestamp  = currentTimestamp
     formerProject   = currentProject
 
   # add last event
@@ -42,7 +40,6 @@ def fromSwitchToIntervals(inputFileName):
   return events
 
 def cleanPeriod(period):
-  holidays = [6, 7] # saturday and sunday
   cleanedEvents = deque([])
   # if a period is inside the work period, do not touch it
   # if it is outside, don't take it into account
@@ -75,9 +72,6 @@ def cleanPeriod(period):
       else:
         createEvent = False
 
-      if cleanedStartTime.isoweekday() in holidays:
-        createEvent = False
-
       if createEvent:
         cleanedEvents.append({
           'name': period['name'],
@@ -85,10 +79,10 @@ def cleanPeriod(period):
           'end_date': cleanedStopTime})
 
       if stopTime > workStartTime + timedelta(days=1):
-        cleanedEvents.extend(cleanPeriod({
+        cleanedEvents.append({
           'name': period['name'],
-          'start_date': workStartTime + timedelta(days=1),
-          'end_date': stopTime}))
+          'start_date': stopTime.replace(hour=9, minute=30),
+          'end_date': stopTime})
   return cleanedEvents
 
 
