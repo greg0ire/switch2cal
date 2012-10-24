@@ -99,7 +99,9 @@ if __name__ == '__main__':
 
     # Gather input
     events = fromSwitchToIntervals(args.input)
-    since    = datetime.strptime(args.since, "%d/%m/%Y")
+    since = None
+    if args.since:
+        since    = datetime.strptime(args.since, "%d/%m/%Y")
 
     # Perform work
 
@@ -120,7 +122,7 @@ if __name__ == '__main__':
         event.add('dtend', period['end_date'])
         cal.add_component(event)
         duration = period['end_date'] - period['start_date']
-        if period['start_date'] > since:
+        if not(since) or (period['start_date'] > since):
             if period['name'] in stats:
                 stats[period['name']] += duration
             else:
