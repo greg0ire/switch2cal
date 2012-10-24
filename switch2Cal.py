@@ -105,6 +105,8 @@ if __name__ == '__main__':
   for period in events:
     cleanedEvents.extend(cleanPeriod(period))
 
+  stats = {}
+
   # Deliver results
   cal = Calendar()
   cal.add('prodid', '-//Generated with switch2cal//gparis//')
@@ -115,6 +117,18 @@ if __name__ == '__main__':
     event.add('dtstart', period['start_date'])
     event.add('dtend', period['end_date'])
     cal.add_component(event)
+    duration = period['end_date'] - period['start_date']
+    if period['name'] in stats:
+      stats[period['name']] += duration
+    else:
+      stats[period['name']] = duration
+    if 'total' in stats:
+      stats['total'] += duration
+    else:
+      stats['total'] = duration
+
+  for stat in stats:
+    print stat, stats[stat]
 
   f = open('/tmp/imputations.ics', 'wb')
   f.write(cal.as_string())
