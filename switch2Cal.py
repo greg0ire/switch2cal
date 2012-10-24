@@ -92,12 +92,14 @@ if __name__ == '__main__':
   parser.add_argument('--input',
                       default=os.path.expanduser(os.path.join('~', '.switch', 'switch_history')),
                       help='the input file path')
+  parser.add_argument('--since', help='the start_date for the statistics')
 
   args = parser.parse_args()
 
 
   # Gather input
   events = fromSwitchToIntervals(args.input)
+  since  = datetime.strptime(args.since, "%d/%m/%Y")
 
   # Perform work
 
@@ -118,14 +120,15 @@ if __name__ == '__main__':
     event.add('dtend', period['end_date'])
     cal.add_component(event)
     duration = period['end_date'] - period['start_date']
-    if period['name'] in stats:
-      stats[period['name']] += duration
-    else:
-      stats[period['name']] = duration
-    if 'total' in stats:
-      stats['total'] += duration
-    else:
-      stats['total'] = duration
+    if period['start_date'] > since:
+      if period['name'] in stats:
+        stats[period['name']] += duration
+      else:
+        stats[period['name']] = duration
+      if 'total' in stats:
+        stats['total'] += duration
+      else:
+        stats['total'] = duration
 
   for stat in stats:
     print stat, stats[stat]
