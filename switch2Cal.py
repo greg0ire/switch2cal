@@ -133,7 +133,7 @@ if __name__ == '__main__':
                 stats['total'] = duration
 
     for stat in stats:
-        print stat, stats[stat]
+        print "%s: %s" % (stat, stats[stat])
 
     f = open('/tmp/imputations.ics', 'wb')
     f.write(cal.as_string())
