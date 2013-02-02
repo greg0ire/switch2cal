@@ -48,12 +48,13 @@ def cleanPeriod(period):
     stopTime         = period['end_date']
     # validate events
     if startTime > stopTime:
-        raise Exception("Event %s is invalid: %r > %r" % (period['name'], period['start_date'], period['end_date']))
+        raise Exception("Event %s is invalid: %r > %r" %
+            (period['name'], period['start_date'], period['end_date']))
 
     if startTime < stopTime:
         # compute the intersection of the event with working hours
-        workStartTime = startTime.replace(hour=9, minute=30)
-        workStopTime  = startTime.replace(hour=19, minute=00)
+        workStartTime = startTime.replace(hour = 9, minute = 30)
+        workStopTime  = startTime.replace(hour = 19, minute = 00)
 
         # discard not intersecting events
         if not (workStopTime < startTime < stopTime < workStartTime + timedelta(days=1)):
@@ -81,7 +82,7 @@ def cleanPeriod(period):
             if stopTime > workStartTime + timedelta(days=1):
                 cleanedEvents.append({
                     'name': period['name'],
-                    'start_date': stopTime.replace(hour=9, minute=30),
+                    'start_date': stopTime.replace(hour = 9, minute = 30),
                     'end_date': stopTime})
     return cleanedEvents
 
