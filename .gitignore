@@ -3,4 +3,5 @@ include
 lib
 lib64
 *.swp
+*.pyc
 local
