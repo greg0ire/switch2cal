@@ -134,7 +134,9 @@ if __name__ == '__main__':
                 stats['total'] = duration
 
     for stat in stats:
-        print "%s: %s" % (stat, stats[stat])
+        if (stat != 'total'):
+            print "%s: %s" % (stat, stats[stat])
+    print "total: %s" % stats['total']
 
     f = open('/tmp/imputations.ics', 'wb')
     f.write(cal.as_string())
