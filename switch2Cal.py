@@ -53,8 +53,8 @@ def cleanPeriod(period):
 
     if startTime < stopTime:
         # compute the intersection of the event with working hours
-        workStartTime = startTime.replace(hour = 9, minute = 30)
-        workStopTime  = startTime.replace(hour = 19, minute = 00)
+        workStartTime = startTime.replace(hour = 9, minute = 30, second = 0)
+        workStopTime  = startTime.replace(hour = 19, minute = 00, second = 0)
 
         # discard not intersecting events
         if not (workStopTime < startTime < stopTime < workStartTime + timedelta(days=1)):
@@ -82,7 +82,7 @@ def cleanPeriod(period):
             if stopTime > workStartTime + timedelta(days=1):
                 cleanedEvents.append({
                     'name': period['name'],
-                    'start_date': stopTime.replace(hour = 9, minute = 30),
+                    'start_date': stopTime.replace(hour = 9, minute = 30, second = 0),
                     'end_date': stopTime})
     return cleanedEvents
 
