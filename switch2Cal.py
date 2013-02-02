@@ -136,6 +136,7 @@ if __name__ == '__main__':
     for stat in stats:
         if (stat != 'total'):
             print "%s: %s" % (stat, stats[stat])
+    print "---------------------"
     print "total: %s" % stats['total']
 
     f = open('/tmp/imputations.ics', 'wb')
