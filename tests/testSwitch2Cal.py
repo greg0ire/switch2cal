@@ -26,6 +26,11 @@ class TestSwitch2CalFunctions(unittest.TestCase):
         cleanedEvents = switch2Cal.cleanPeriod(period)
         self.assertEquals(len(cleanedEvents), 1)
 
+        cleanedPeriod = cleanedEvents.pop()
+        self.assertEquals(cleanedPeriod['start_date'], period['start_date'])
+        self.assertEquals(cleanedPeriod['end_date'], period['end_date'])
+
+
 
 if __name__ == '__main__':
     unittest.main()
