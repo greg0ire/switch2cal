@@ -3,7 +3,7 @@ import unittest
 from datetime import datetime
 
 class TestSwitch2CalFunctions(unittest.TestCase):
-    def testCleanPeriod(self):
+    def testCleanAlreadyCleanPeriod(self):
         period = {
             'name': 'testProject',
             'start_date': datetime(
@@ -24,9 +24,11 @@ class TestSwitch2CalFunctions(unittest.TestCase):
             )
         }
         cleanedEvents = switch2Cal.cleanPeriod(period)
+        # assert there was no splitting
         self.assertEquals(len(cleanedEvents), 1)
 
         cleanedPeriod = cleanedEvents.pop()
+        # assert this function is idempotent (the event is already clean)
         self.assertEquals(cleanedPeriod['start_date'], period['start_date'])
         self.assertEquals(cleanedPeriod['end_date'], period['end_date'])
 
