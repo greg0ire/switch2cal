@@ -199,6 +199,29 @@ class TestSwitch2CalFunctions(unittest.TestCase):
         cleanedEvents = switch2Cal.cleanPeriod(period)
         self.assertEquals(len(cleanedEvents), 0)
 
+    def testBuggyEvent(self):
+        buggyPeriod = {
+            'name': 'uni',
+            'start_date': datetime(
+                year    = 2013,
+                month   = 1,
+                day     = 31,
+                hour    = 21,
+                minute  = 38,
+                second  = 59
+            ),
+            'end_date' : datetime(
+                year    = 2013,
+                month   = 2,
+                day     = 1,
+                hour    = 9,
+                minute  = 49,
+                second  = 29
+            )
+        }
+        cleanedEvents = switch2Cal.cleanPeriod(buggyPeriod)
+        self.assertEquals(len(cleanedEvents), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

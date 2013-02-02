@@ -68,7 +68,7 @@ def cleanPeriod(period):
 
             if stopTime < workStopTime:
                 cleanedStopTime = stopTime
-            elif stopTime > cleanedStartTime:
+            elif stopTime > cleanedStartTime and workStopTime > cleanedStartTime:
                 cleanedStopTime = workStopTime
             else:
                 createEvent = False
@@ -79,6 +79,7 @@ def cleanPeriod(period):
                     'start_date': cleanedStartTime,
                     'end_date': cleanedStopTime})
 
+            # handle second part of the split
             if stopTime > workStartTime + timedelta(days=1):
                 cleanedEvents.append({
                     'name': period['name'],
