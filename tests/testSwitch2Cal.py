@@ -176,5 +176,29 @@ class TestSwitch2CalFunctions(unittest.TestCase):
                 )
             })
 
+    def testNightlyEventIsIgnored(self):
+        period = {
+            'name': 'testproject',
+            'start_date': datetime(
+                year   = 2000,
+                month  = 1,
+                day    = 1,
+                hour   = 20,
+                minute = 00,
+                second = 00
+            ),
+            'end_date': datetime(
+                year   = 2000,
+                month  = 1,
+                day    = 2,
+                hour   = 6,
+                minute = 10,
+                second = 30
+            )
+        }
+        cleanedEvents = switch2Cal.cleanPeriod(period)
+        self.assertEquals(len(cleanedEvents), 0)
+
+
 if __name__ == '__main__':
     unittest.main()
