@@ -1,8 +1,8 @@
 import switch2Cal
-import unittest
+import unittest2
 from datetime import datetime
 
-class TestSwitch2CalFunctions(unittest.TestCase):
+class TestSwitch2CalFunctions(unittest2.TestCase):
     def testCleanAlreadyCleanPeriod(self):
         period = {
             'name': 'testProject',
