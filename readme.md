@@ -9,3 +9,5 @@ To run tests, install unittest2 and run
 ```
 python -m unittest2 discover .
 ```
+
+[![Build Status](https://travis-ci.org/greg0ire/switch2cal.png)](https://travis-ci.org/greg0ire/switch2cal)
