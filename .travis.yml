@@ -1,0 +1,7 @@
+language: python
+python:
+  - "2.7"
+install:
+  - "easy_install http://codespeak.net/icalendar/iCalendar-1.2.tgz"
+  - "pip install unittest2"
+script: "python -m unittest2 discover ."
